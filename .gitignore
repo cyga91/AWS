@@ -36,5 +36,5 @@
 ehthumbs.db
 Thumbs.db
 .idea
-HelloWorld.iml
+*.iml
 target
