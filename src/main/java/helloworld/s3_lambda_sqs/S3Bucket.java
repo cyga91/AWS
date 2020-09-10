@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static helloworld.constant.Constants.BUCKET_FOUND;
-import static helloworld.constant.Constants.BUCKET_NAME;
+import static helloworld.constant.Constants.BUCKET_NAME_INPUT;
 import static helloworld.constant.Constants.CURRENT_BUCKET;
 import static helloworld.constant.Constants.FILE_PATH;
 import static helloworld.constant.Constants.KEY_NAME;
@@ -33,7 +33,7 @@ public class S3Bucket {
         Objects.requireNonNull(bucket);
 
         try {
-            s3.putObject(BUCKET_NAME, KEY_NAME, new File(FILE_PATH));
+            s3.putObject(BUCKET_NAME_INPUT, KEY_NAME, new File(FILE_PATH));
         } catch (AmazonServiceException e) {
             logger.error(e.getErrorMessage());
             System.exit(1);
@@ -45,17 +45,17 @@ public class S3Bucket {
         final AmazonS3 s3 = AmazonS3ClientBuilder.standard().withRegion(Regions.EU_WEST_1).build();
 
         Bucket b = null;
-        if (s3.doesBucketExistV2(BUCKET_NAME)) {
-            b = getBucket(BUCKET_NAME);
+        if (s3.doesBucketExistV2(BUCKET_NAME_INPUT)) {
+            b = getBucket(BUCKET_NAME_INPUT);
         } else {
             try {
-                b = s3.createBucket(BUCKET_NAME);
+                b = s3.createBucket(BUCKET_NAME_INPUT);
             } catch (AmazonS3Exception e) {
                 logger.error(e.getErrorMessage());
                 System.exit(1);
             }
         }
-        logger.info(CURRENT_BUCKET + BUCKET_NAME);
+        logger.info(CURRENT_BUCKET + BUCKET_NAME_INPUT);
         return b;
     }
 
@@ -66,7 +66,7 @@ public class S3Bucket {
         List<Bucket> buckets = s3.listBuckets();
         for (Bucket b : buckets) {
             if (b.getName().equals(bucketName)) {
-                logger.info(BUCKET_FOUND + BUCKET_NAME);
+                logger.info(BUCKET_FOUND + BUCKET_NAME_INPUT);
                 bucket = b;
             }
         }
