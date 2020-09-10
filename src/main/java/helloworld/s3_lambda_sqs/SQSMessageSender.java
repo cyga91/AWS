@@ -11,8 +11,6 @@ import com.google.gson.GsonBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.logging.Handler;
-
 import static helloworld.constant.Constants.MESSAGE;
 import static helloworld.constant.Constants.MESSAGE_SENT;
 import static helloworld.constant.Constants.QUEUE_NAME;
@@ -20,7 +18,7 @@ import static helloworld.constant.Constants.WITH_DELAY_SECONDS;
 
 public class SQSMessageSender {
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    private static final Logger logger = LoggerFactory.getLogger(Handler.class);
+    private static final Logger logger = LoggerFactory.getLogger(SQSMessageSender.class);
 
     public static void main(String[] args) {
         final AmazonSQS sqs = AmazonSQSClientBuilder.defaultClient();
