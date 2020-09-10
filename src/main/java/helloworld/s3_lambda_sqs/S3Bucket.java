@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Objects;
 
 import static helloworld.constant.Constants.BUCKET_FOUND;
-import static helloworld.constant.Constants.BUCKET_NAME_INPUT;
 import static helloworld.constant.Constants.CURRENT_BUCKET;
 import static helloworld.constant.Constants.FILE_PATH;
 import static helloworld.constant.Constants.KEY_NAME;
@@ -26,14 +25,14 @@ public class S3Bucket {
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private static final Logger logger = LoggerFactory.getLogger(S3Bucket.class);
 
-    public static void putObjectToBucket() {
+    public static void putObjectToBucket(String buckeName) {
         final AmazonS3 s3 = AmazonS3ClientBuilder.standard().withRegion(Regions.EU_WEST_1).build();
 
-        Bucket bucket = createBucket();
+        Bucket bucket = createBucket(buckeName);
         Objects.requireNonNull(bucket);
 
         try {
-            s3.putObject(BUCKET_NAME_INPUT, KEY_NAME, new File(FILE_PATH));
+            s3.putObject(buckeName, KEY_NAME, new File(FILE_PATH));
         } catch (AmazonServiceException e) {
             logger.error(e.getErrorMessage());
             System.exit(1);
@@ -41,21 +40,21 @@ public class S3Bucket {
         logger.info(SUCCESS_WRITE_TO_S3);
     }
 
-    public static Bucket createBucket() {
+    public static Bucket createBucket(String buckeName) {
         final AmazonS3 s3 = AmazonS3ClientBuilder.standard().withRegion(Regions.EU_WEST_1).build();
 
         Bucket b = null;
-        if (s3.doesBucketExistV2(BUCKET_NAME_INPUT)) {
-            b = getBucket(BUCKET_NAME_INPUT);
+        if (s3.doesBucketExistV2(buckeName)) {
+            b = getBucket(buckeName);
         } else {
             try {
-                b = s3.createBucket(BUCKET_NAME_INPUT);
+                b = s3.createBucket(buckeName);
             } catch (AmazonS3Exception e) {
                 logger.error(e.getErrorMessage());
                 System.exit(1);
             }
         }
-        logger.info(CURRENT_BUCKET + BUCKET_NAME_INPUT);
+        logger.info(CURRENT_BUCKET + buckeName);
         return b;
     }
 
@@ -66,7 +65,7 @@ public class S3Bucket {
         List<Bucket> buckets = s3.listBuckets();
         for (Bucket b : buckets) {
             if (b.getName().equals(bucketName)) {
-                logger.info(BUCKET_FOUND + BUCKET_NAME_INPUT);
+                logger.info(BUCKET_FOUND + bucketName);
                 bucket = b;
             }
         }
