@@ -24,8 +24,10 @@ public final class Constants {
     // messages
     public static final String SUCCESS_WRITE_TO_S3 = "File has been written to S3 bucket!";
     public static final String CURRENT_BUCKET = "Current bucket is: ";
-    public static final String BUCKET_FOUND = "Bucket found : ";
+    public static final String BUCKET_FOUND = "Bucket found: ";
 
     public static final String MESSAGE = "Hello from message ";
     public static final String MESSAGE_SENT = "Message has been sent to queue";
+
+    public static final String SQS_FOUND = "SQS found: ";
 }
