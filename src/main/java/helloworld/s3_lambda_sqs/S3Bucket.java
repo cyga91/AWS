@@ -25,10 +25,8 @@ public class S3Bucket {
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private static final Logger logger = LoggerFactory.getLogger(S3Bucket.class);
 
-    public static void putObjectToBucket(String buckeName) {
-        final AmazonS3 s3 = AmazonS3ClientBuilder.standard().withRegion(Regions.EU_WEST_1).build();
-
-        Bucket bucket = createBucket(buckeName);
+    public static void putObjectToBucket(AmazonS3 s3, String buckeName) {
+        Bucket bucket = createBucket(s3, buckeName);
         Objects.requireNonNull(bucket);
 
         try {
@@ -40,9 +38,7 @@ public class S3Bucket {
         logger.info(SUCCESS_WRITE_TO_S3);
     }
 
-    public static Bucket createBucket(String buckeName) {
-        final AmazonS3 s3 = AmazonS3ClientBuilder.standard().withRegion(Regions.EU_WEST_1).build();
-
+    public static Bucket createBucket(AmazonS3 s3, String buckeName) {
         Bucket b = null;
         if (s3.doesBucketExistV2(buckeName)) {
             b = getBucket(buckeName);
