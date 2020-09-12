@@ -3,20 +3,20 @@ package helloworld.constant;
 import java.nio.file.Paths;
 
 public final class Constants {
-    // SQS (could be move to .yaml)
-    public static final String QUEUE_NAME = "SQSS3Lambda";
+    // SQS
+    public static final String QUEUE_NAME = "rcyganczuk_in_cloud_S3SQSLambda";
     public static final int WITH_DELAY_SECONDS = 10;
 
 
-    // S3 Bucket (could be move to .yaml)
-    public static final String BUCKET_NAME_INPUT = "radekincloudbucketinput";
-    public static final String BUCKET_NAME_OUTPUT = "radekincloudbucketoutput";
+    // S3 Bucket
+    public static final String BUCKET_NAME_INPUT = "rcyganczuk-in-cloud-bucket-input";
+    public static final String BUCKET_NAME_OUTPUT = "rcyganczuk-in-cloud-bucket-output";
     public static final String BUCKET_OUTPUT_KEY = "HelloWorld-1.0.jar";
     public static final String FILE_PATH = "src/main/resources/simpleText.txt";
     public static final String KEY_NAME = Paths.get(FILE_PATH).getFileName().toString();
 
     // Lambda
-    public static final String LAMBDA_FUNCTION_NAME = "rcLambdaS3SQS";
+    public static final String LAMBDA_FUNCTION_NAME = "rcyganczuk_in_cloud_SQSLambdaSQS";
     public static final String LAMBDA_FUNCTION_ROLE = "arn:aws:iam::910682323108:role/aws-jdk-tool-HelloWorldFunctionRole-FQMTW660F1QY";
     public static final String LAMBDA_FUNCTION_RUNTIME = "java8";
     public static final String LAMBDA_FUNCTION_HANDLER = "helloworld.s3_lambda_sqs.ReadWriteS3LambdaSQS::handleRequest";
