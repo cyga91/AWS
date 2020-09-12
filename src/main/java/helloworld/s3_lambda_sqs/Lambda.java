@@ -23,12 +23,6 @@ import static helloworld.constant.Constants.LAMBDA_FUNCTION_ROLE;
 import static helloworld.constant.Constants.LAMBDA_FUNCTION_RUNTIME;
 
 public class Lambda {
-    S3Bucket s3Bucket;
-
-    public Lambda(S3Bucket s3Bucket) {
-        this.s3Bucket = s3Bucket;
-    }
-
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private static final Logger logger = LoggerFactory.getLogger(Lambda.class);
 
