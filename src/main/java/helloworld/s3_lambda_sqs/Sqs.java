@@ -16,9 +16,9 @@ import static helloworld.constant.Constants.MESSAGE_SENT;
 import static helloworld.constant.Constants.QUEUE_NAME;
 import static helloworld.constant.Constants.WITH_DELAY_SECONDS;
 
-public class SQSMessageSender {
+public class Sqs {
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    private static final Logger logger = LoggerFactory.getLogger(SQSMessageSender.class);
+    private static final Logger logger = LoggerFactory.getLogger(Sqs.class);
 
     public static void main(String[] args) {
         final AmazonSQS sqs = AmazonSQSClientBuilder.defaultClient();
