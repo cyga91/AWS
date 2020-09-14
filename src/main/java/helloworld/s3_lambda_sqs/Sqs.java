@@ -24,7 +24,7 @@ public class Sqs {
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private static final Logger logger = LoggerFactory.getLogger(Sqs.class);
 
-    public static CreateQueueResult getAmazonSQS(AmazonSQS sqs, String queueName) {
+    public CreateQueueResult getAmazonSQS() {
         // Create queue if doesn't exists
         CreateQueueResult queue = null;
         try {
@@ -40,8 +40,8 @@ public class Sqs {
         return queue;
     }
 
-    public static void sendSQSMessage(AmazonSQS sqs, String queueName) {
-        getAmazonSQS(sqs, queueName);
+    public void sendSQSMessage(String message) {
+        getAmazonSQS();
         String queueUrl = sqs.getQueueUrl(queueName).getQueueUrl();
 
         // Send multiple messages to the queue
