@@ -9,17 +9,17 @@ import helloworld.s3_lambda_sqs.Lambda;
 import helloworld.s3_lambda_sqs.S3Bucket;
 import helloworld.s3_lambda_sqs.Sqs;
 
-import static helloworld.constant.Constants.BUCKET_NAME_INPUT;
+import static helloworld.constant.Constants.BUCKET_NAME_OUTPUT;
 import static helloworld.constant.Constants.LAMBDA_FUNCTION_NAME;
-import static helloworld.constant.Constants.QUEUE_NAME;
+import static helloworld.constant.Constants.QUEUE_OUTPUT_NAME;
 
 public class HelloWord {
     public static void main(String[] args) {
         final AmazonS3 s3 = AmazonS3ClientBuilder.standard().withRegion(Regions.EU_WEST_1).build();
         final AmazonSQS sqs = AmazonSQSClientBuilder.defaultClient();
 
-        S3Bucket.putObjectToBucket(s3, BUCKET_NAME_INPUT);
-        Sqs.getAmazonSQS(sqs, QUEUE_NAME);
+        S3Bucket.putObjectToBucket(s3, BUCKET_NAME_OUTPUT);
+        Sqs.getAmazonSQS(sqs, QUEUE_OUTPUT_NAME);
         Lambda.createLambdaFunction(LAMBDA_FUNCTION_NAME);
     }
 }

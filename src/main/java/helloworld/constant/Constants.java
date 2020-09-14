@@ -4,12 +4,11 @@ import java.nio.file.Paths;
 
 public final class Constants {
     // SQS
-    public static final String QUEUE_NAME = "rcyganczuk_in_cloud_S3SQSLambda";
+    public static final String QUEUE_OUTPUT_NAME = "rcyganczuk_in_cloud_SQS_output";
     public static final int WITH_DELAY_SECONDS = 10;
 
 
     // S3 Bucket
-    public static final String BUCKET_NAME_INPUT = "rcyganczuk-in-cloud-bucket-input";
     public static final String BUCKET_NAME_OUTPUT = "rcyganczuk-in-cloud-bucket-output";
     public static final String BUCKET_OUTPUT_KEY = "HelloWorld-1.0.jar";
     public static final String FILE_PATH = "src/main/resources/simpleText.txt";
