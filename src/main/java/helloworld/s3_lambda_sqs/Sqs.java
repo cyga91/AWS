@@ -10,7 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static helloworld.constant.Constants.MESSAGE_SENT;
+import static helloworld.constant.Constants.SQS_ALREADY_EXIST_ERROR;
 import static helloworld.constant.Constants.SQS_FOUND;
+import static helloworld.constant.Constants.WITH_DELAY_SECONDS;
 
 public class Sqs {
     private AmazonSQS sqs;
@@ -30,7 +32,7 @@ public class Sqs {
         try {
             queue = sqs.createQueue(queueName);
         } catch (AmazonSQSException e) {
-            if (!e.getErrorCode().equals("QueueAlreadyExists")) {
+            if (!e.getErrorCode().equals(SQS_ALREADY_EXIST_ERROR)) {
                 logger.error(e.getMessage());
             }
             logger.error(e.getErrorMessage());
@@ -48,7 +50,7 @@ public class Sqs {
         SendMessageRequest send_msg_request = new SendMessageRequest()
                 .withQueueUrl(queueUrl)
                 .withMessageBody(message)
-                .withDelaySeconds(5);
+                .withDelaySeconds(WITH_DELAY_SECONDS);
         sqs.sendMessage(send_msg_request);
         logger.info(MESSAGE_SENT);
     }
