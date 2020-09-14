@@ -31,6 +31,7 @@ public final class Constants {
 
     public static final String SQS_FOUND = "SQS found: ";
     public static final String SQS_RECEIVED_MESSAGE = "Message received from SQS: ";
+    public static final String SQS_ALREADY_EXIST_ERROR = "QueueAlreadyExists";
 
     public static final int SYSTEM_EXIT_STATUS = 1;
 }
