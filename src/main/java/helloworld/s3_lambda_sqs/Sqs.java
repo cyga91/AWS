@@ -45,15 +45,11 @@ public class Sqs {
         String queueUrl = sqs.getQueueUrl(queueName).getQueueUrl();
 
         // Send multiple messages to the queue
-        SendMessageBatchRequest send_batch_request = new SendMessageBatchRequest()
+        SendMessageRequest send_msg_request = new SendMessageRequest()
                 .withQueueUrl(queueUrl)
-                .withEntries(
-                        new SendMessageBatchRequestEntry(
-                                "msg_1", MESSAGE + 1),
-                        new SendMessageBatchRequestEntry(
-                                "msg_2", MESSAGE + 2)
-                                .withDelaySeconds(WITH_DELAY_SECONDS));
-        sqs.sendMessageBatch(send_batch_request);
+                .withMessageBody(message)
+                .withDelaySeconds(5);
+        sqs.sendMessage(send_msg_request);
         logger.info(MESSAGE_SENT);
     }
 }
