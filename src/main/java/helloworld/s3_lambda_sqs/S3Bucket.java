@@ -20,6 +20,7 @@ import static helloworld.constant.Constants.CURRENT_BUCKET;
 import static helloworld.constant.Constants.FILE_PATH;
 import static helloworld.constant.Constants.KEY_NAME;
 import static helloworld.constant.Constants.SUCCESS_WRITE_TO_S3;
+import static helloworld.constant.Constants.SYSTEM_EXIT_STATUS;
 
 public class S3Bucket {
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -33,7 +34,7 @@ public class S3Bucket {
             s3.putObject(buckeName, KEY_NAME, new File(FILE_PATH));
         } catch (AmazonServiceException e) {
             logger.error(e.getErrorMessage());
-            System.exit(1);
+            System.exit(SYSTEM_EXIT_STATUS);
         }
         logger.info(SUCCESS_WRITE_TO_S3);
     }
@@ -47,7 +48,7 @@ public class S3Bucket {
                 b = s3.createBucket(buckeName);
             } catch (AmazonS3Exception e) {
                 logger.error(e.getErrorMessage());
-                System.exit(1);
+                System.exit(SYSTEM_EXIT_STATUS);
             }
         }
         logger.info(CURRENT_BUCKET + buckeName);
