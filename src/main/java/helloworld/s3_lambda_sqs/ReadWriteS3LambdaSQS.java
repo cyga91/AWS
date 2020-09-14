@@ -14,6 +14,10 @@ public class ReadWriteS3LambdaSQS implements RequestHandler<SQSEvent, String> {
 
     @Override
     public String handleRequest(SQSEvent sqsEvent, Context context) {
+        for (SQSEvent.SQSMessage msg : sqsEvent.getRecords()) {
+            logger.info("processing sqs msg in lambda");
+            logger.info(msg.getBody());
+        }
         return null;
     }
 }
