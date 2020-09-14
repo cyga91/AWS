@@ -30,4 +30,5 @@ public final class Constants {
     public static final String MESSAGE_SENT = "Message has been sent to queue";
 
     public static final String SQS_FOUND = "SQS found: ";
+    public static final String SQS_RECEIVED_MESSAGE = "Message received from SQS: ";
 }
