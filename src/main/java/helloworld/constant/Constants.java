@@ -5,6 +5,7 @@ import java.nio.file.Paths;
 public final class Constants {
     // SQS
     public static final String QUEUE_OUTPUT_NAME = "rcyganczuk_in_cloud_SQS_output";
+    public static final String QUEUE_INPUT_NAME = "rcyganczuk_in_cloud_SQS_input";
     public static final int WITH_DELAY_SECONDS = 10;
 
 
