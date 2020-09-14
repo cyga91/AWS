@@ -3,19 +3,24 @@ package helloworld.s3_lambda_sqs;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.model.AmazonSQSException;
 import com.amazonaws.services.sqs.model.CreateQueueResult;
-import com.amazonaws.services.sqs.model.SendMessageBatchRequest;
-import com.amazonaws.services.sqs.model.SendMessageBatchRequestEntry;
+import com.amazonaws.services.sqs.model.SendMessageRequest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static helloworld.constant.Constants.MESSAGE;
 import static helloworld.constant.Constants.MESSAGE_SENT;
 import static helloworld.constant.Constants.SQS_FOUND;
-import static helloworld.constant.Constants.WITH_DELAY_SECONDS;
 
 public class Sqs {
+    private AmazonSQS sqs;
+    private String queueName;
+
+    public Sqs(AmazonSQS sqs, String queueName) {
+        this.sqs = sqs;
+        this.queueName = queueName;
+    }
+
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private static final Logger logger = LoggerFactory.getLogger(Sqs.class);
 
