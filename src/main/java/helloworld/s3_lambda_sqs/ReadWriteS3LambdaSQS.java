@@ -4,15 +4,32 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.SQSEvent;
+import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
+
+import java.util.Objects;
+
+import static helloworld.constant.Constants.QUEUE_INPUT_NAME;
+import static helloworld.constant.Constants.SQS_RECEIVED_MESSAGE;
 
 public class ReadWriteS3LambdaSQS implements RequestHandler<SQSEvent, String> {
     @Override
     public String handleRequest(SQSEvent sqsEvent, Context context) {
         LambdaLogger logger = context.getLogger();
+        Sqs queue = new Sqs(AmazonSQSClientBuilder.defaultClient(), QUEUE_INPUT_NAME);
+
+        String result = null;
 
         for (SQSEvent.SQSMessage msg : sqsEvent.getRecords()) {
-            logger.log(msg.getBody());
+            result = msg.getBody();
+            logger.log(SQS_RECEIVED_MESSAGE + msg.getBody());
         }
-        return null;
+
+        Objects.requireNonNull(result);
+        String resultConverted = result.toUpperCase();
+
+        queue.getAmazonSQS();
+        queue.sendSQSMessage(resultConverted);
+
+        return "200 Ok";
     }
 }
