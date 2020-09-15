@@ -18,7 +18,6 @@ import java.util.Objects;
 import static helloworld.constant.Constants.BUCKET_FOUND;
 import static helloworld.constant.Constants.CURRENT_BUCKET;
 import static helloworld.constant.Constants.FILE_PATH;
-import static helloworld.constant.Constants.KEY_NAME;
 import static helloworld.constant.Constants.SUCCESS_WRITE_TO_S3;
 import static helloworld.constant.Constants.SYSTEM_EXIT_STATUS;
 
@@ -34,12 +33,12 @@ public class S3Bucket {
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private static final Logger logger = LoggerFactory.getLogger(S3Bucket.class);
 
-    public static void putObjectToBucket(AmazonS3 s3, String buckeName) {
-        Bucket bucket = createBucket(s3, buckeName);
+    public void putObjectToBucket(String buckeName, String keyName) {
+        Bucket bucket = checkBucket(s3, buckeName);
         Objects.requireNonNull(bucket);
 
         try {
-            s3.putObject(buckeName, KEY_NAME, new File(FILE_PATH));
+            s3.putObject(buckeName, keyName, new File(FILE_PATH));
         } catch (AmazonServiceException e) {
             logger.error(e.getErrorMessage());
             System.exit(SYSTEM_EXIT_STATUS);
@@ -47,7 +46,7 @@ public class S3Bucket {
         logger.info(SUCCESS_WRITE_TO_S3);
     }
 
-    public static Bucket createBucket(AmazonS3 s3, String buckeName) {
+    public Bucket checkBucket(AmazonS3 s3, String buckeName) {
         Bucket b = null;
         if (s3.doesBucketExistV2(buckeName)) {
             b = getBucket(buckeName);
@@ -63,7 +62,7 @@ public class S3Bucket {
         return b;
     }
 
-    public static Bucket getBucket(String bucketName) {
+    public Bucket getBucket(String bucketName) {
         final AmazonS3 s3 = AmazonS3ClientBuilder.standard().withRegion(Regions.EU_WEST_1).build();
 
         Bucket bucket = null;
