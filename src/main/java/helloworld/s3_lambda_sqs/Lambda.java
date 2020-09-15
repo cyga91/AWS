@@ -11,51 +11,58 @@ import com.amazonaws.services.lambda.model.InvokeResult;
 import com.amazonaws.services.lambda.model.ServiceException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import lombok.Builder;
+import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.charset.StandardCharsets;
 
-import static helloworld.constant.Constants.BUCKET_NAME_OUTPUT;
-import static helloworld.constant.Constants.BUCKET_OUTPUT_KEY;
-import static helloworld.constant.Constants.LAMBDA_FUNCTION_HANDLER;
-import static helloworld.constant.Constants.LAMBDA_FUNCTION_ROLE;
 import static helloworld.constant.Constants.LAMBDA_FUNCTION_RUNTIME;
 
+@Data
+@Builder
 public class Lambda {
+    private String lambdaName;
+    private Regions region;
+    private String role;
+    private String s3BucketName;
+    private String s3BucketKey;
+    private String handler;
+
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private static final Logger logger = LoggerFactory.getLogger(Lambda.class);
 
-    public static void createLambdaFunction(String lambdaFunctionName) {
+    public void createLambdaFunction() {
         try {
             AWSLambda awsLambda = AWSLambdaClientBuilder.standard()
                     .withCredentials(new ProfileCredentialsProvider())
                     .withRegion(Regions.EU_WEST_1).build();
 
-            CreateFunctionRequest functionRequest = getFunctionRequest(lambdaFunctionName);
+            CreateFunctionRequest functionRequest = getFunctionRequest();
             awsLambda.createFunction(functionRequest);
         } catch (ServiceException e) {
             logger.error(e.getErrorMessage());
             System.exit(1);
         }
-        checkLambdaFunction(lambdaFunctionName);
+        checkLambdaFunction(lambdaName);
     }
 
-    private static CreateFunctionRequest getFunctionRequest(String lambdaFunctionName) {
+    private CreateFunctionRequest getFunctionRequest() {
         CreateFunctionRequest functionRequest = new CreateFunctionRequest();
-        functionRequest.setFunctionName(lambdaFunctionName);
-        functionRequest.setRole(LAMBDA_FUNCTION_ROLE);
+        functionRequest.setFunctionName(lambdaName);
+        functionRequest.setRole(role);
         FunctionCode code = new FunctionCode();
-        code.setS3Bucket(BUCKET_NAME_OUTPUT);
-        code.setS3Key(BUCKET_OUTPUT_KEY);
+        code.setS3Bucket(s3BucketName);
+        code.setS3Key(s3BucketKey);
         functionRequest.setCode(code);
         functionRequest.setRuntime(LAMBDA_FUNCTION_RUNTIME);
-        functionRequest.setHandler(LAMBDA_FUNCTION_HANDLER);
+        functionRequest.setHandler(handler);
 
         return functionRequest;
     }
 
-    public static void checkLambdaFunction(String lambdaFunctionName) {
+    public void checkLambdaFunction(String lambdaFunctionName) {
         InvokeRequest invokeRequest = new InvokeRequest()
                 .withFunctionName(lambdaFunctionName);
 
