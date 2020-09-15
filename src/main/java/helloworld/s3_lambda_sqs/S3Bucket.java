@@ -33,12 +33,12 @@ public class S3Bucket {
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private static final Logger logger = LoggerFactory.getLogger(S3Bucket.class);
 
-    public void putObjectToBucket(String buckeName, String keyName) {
-        Bucket bucket = checkBucket(s3, buckeName);
+    public void putObjectToBucket(String bucketName, String keyName) {
+        Bucket bucket = checkBucket(s3, bucketName);
         Objects.requireNonNull(bucket);
 
         try {
-            s3.putObject(buckeName, keyName, new File(FILE_PATH));
+            s3.putObject(bucketName, keyName, new File(FILE_PATH));
         } catch (AmazonServiceException e) {
             logger.error(e.getErrorMessage());
             System.exit(SYSTEM_EXIT_STATUS);
