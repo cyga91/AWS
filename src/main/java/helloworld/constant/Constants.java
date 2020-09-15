@@ -13,7 +13,7 @@ public final class Constants {
     public static final String BUCKET_NAME_OUTPUT = "rcyganczuk-in-cloud-bucket-output";
     public static final String BUCKET_OUTPUT_KEY = "HelloWorld-1.0.jar";
     public static final String FILE_PATH = "src/main/resources/simpleText.txt";
-    public static final String KEY_NAME = Paths.get(FILE_PATH).getFileName().toString();
+    public static final String FILE_NAME = Paths.get(FILE_PATH).getFileName().toString();
 
     // Lambda
     public static final String LAMBDA_FUNCTION_NAME = "rcyganczuk_in_cloud_SQSLambdaSQS";
