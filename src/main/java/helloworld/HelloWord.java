@@ -9,7 +9,8 @@ import helloworld.s3_lambda_sqs.Sqs;
 
 import static helloworld.constant.Constants.BUCKET_NAME_OUTPUT;
 import static helloworld.constant.Constants.FILE_NAME;
-import static helloworld.constant.Constants.LAMBDA_FUNCTION_NAME;
+import static helloworld.constant.Constants.LAMBDA_FUNCTION_INPUT_NAME;
+import static helloworld.constant.Constants.LAMBDA_FUNCTION_OUTPUT_NAME;
 import static helloworld.constant.Constants.QUEUE_OUTPUT_NAME;
 
 public class HelloWord {
@@ -19,6 +20,7 @@ public class HelloWord {
 
         bucket.putObjectToBucket(FILE_NAME);
         output_queue.getAmazonSQS();
-        Lambda.createLambdaFunction(LAMBDA_FUNCTION_NAME);
+        Lambda.createLambdaFunction(LAMBDA_FUNCTION_OUTPUT_NAME);
+        Lambda.createLambdaFunction(LAMBDA_FUNCTION_INPUT_NAME);
     }
 }
