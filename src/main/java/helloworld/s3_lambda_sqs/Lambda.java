@@ -24,7 +24,6 @@ import static helloworld.constant.Constants.LAMBDA_FUNCTION_RUNTIME;
 @Builder
 public class Lambda {
     private String lambdaName;
-    private Regions region;
     private String role;
     private String s3BucketName;
     private String s3BucketKey;
