@@ -1,9 +1,7 @@
 package helloworld.s3_lambda_sqs;
 
 import com.amazonaws.AmazonServiceException;
-import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.AmazonS3Exception;
 import com.amazonaws.services.s3.model.Bucket;
 import com.google.gson.Gson;
@@ -33,12 +31,12 @@ public class S3Bucket {
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private static final Logger logger = LoggerFactory.getLogger(S3Bucket.class);
 
-    public void putObjectToBucket(String bucketName, String keyName) {
-        Bucket bucket = checkBucket(s3, bucketName);
+    public void putObjectToBucket(String fileName) {
+        Bucket bucket = checkBucket();
         Objects.requireNonNull(bucket);
 
         try {
-            s3.putObject(bucketName, keyName, new File(FILE_PATH));
+            s3.putObject(bucketName, fileName, new File(FILE_PATH));
         } catch (AmazonServiceException e) {
             logger.error(e.getErrorMessage());
             System.exit(SYSTEM_EXIT_STATUS);
@@ -46,25 +44,23 @@ public class S3Bucket {
         logger.info(SUCCESS_WRITE_TO_S3);
     }
 
-    public Bucket checkBucket(AmazonS3 s3, String buckeName) {
+    public Bucket checkBucket() {
         Bucket b = null;
-        if (s3.doesBucketExistV2(buckeName)) {
-            b = getBucket(buckeName);
+        if (s3.doesBucketExistV2(bucketName)) {
+            b = getBucket(bucketName);
         } else {
             try {
-                b = s3.createBucket(buckeName);
+                b = s3.createBucket(bucketName);
             } catch (AmazonS3Exception e) {
                 logger.error(e.getErrorMessage());
                 System.exit(SYSTEM_EXIT_STATUS);
             }
         }
-        logger.info(CURRENT_BUCKET + buckeName);
+        logger.info(CURRENT_BUCKET + bucketName);
         return b;
     }
 
     public Bucket getBucket(String bucketName) {
-        final AmazonS3 s3 = AmazonS3ClientBuilder.standard().withRegion(Regions.EU_WEST_1).build();
-
         Bucket bucket = null;
         List<Bucket> buckets = s3.listBuckets();
         for (Bucket b : buckets) {

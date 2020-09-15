@@ -17,7 +17,7 @@ public class HelloWord {
         S3Bucket bucket = new S3Bucket(AmazonS3ClientBuilder.standard().withRegion(Regions.EU_WEST_1).build(), BUCKET_NAME_OUTPUT);
         Sqs output_queue = new Sqs(AmazonSQSClientBuilder.defaultClient(), QUEUE_OUTPUT_NAME);
 
-        bucket.putObjectToBucket(BUCKET_NAME_OUTPUT, FILE_NAME);
+        bucket.putObjectToBucket(FILE_NAME);
         output_queue.getAmazonSQS();
         Lambda.createLambdaFunction(LAMBDA_FUNCTION_NAME);
     }
