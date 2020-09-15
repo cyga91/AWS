@@ -16,7 +16,8 @@ public final class Constants {
     public static final String FILE_NAME = Paths.get(FILE_PATH).getFileName().toString();
 
     // Lambda
-    public static final String LAMBDA_FUNCTION_NAME = "rcyganczuk_in_cloud_SQSLambdaSQS";
+    public static final String LAMBDA_FUNCTION_OUTPUT_NAME = "rcyganczuk_in_cloud_SQSLambdaSQS";
+    public static final String LAMBDA_FUNCTION_INPUT_NAME = "rcyganczuk_in_cloud_SQSLambdaSQS";
     public static final String LAMBDA_FUNCTION_ROLE = "arn:aws:iam::910682323108:role/aws-jdk-tool-HelloWorldFunctionRole-FQMTW660F1QY";
     public static final String LAMBDA_FUNCTION_RUNTIME = "java8";
     public static final String LAMBDA_FUNCTION_HANDLER = "helloworld.s3_lambda_sqs.ReadWriteS3LambdaSQS::handleRequest";
