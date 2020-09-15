@@ -23,6 +23,14 @@ import static helloworld.constant.Constants.SUCCESS_WRITE_TO_S3;
 import static helloworld.constant.Constants.SYSTEM_EXIT_STATUS;
 
 public class S3Bucket {
+    private AmazonS3 s3;
+    private String bucketName;
+
+    public S3Bucket(AmazonS3 s3, String bucketName) {
+        this.s3 = s3;
+        this.bucketName = bucketName;
+    }
+
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private static final Logger logger = LoggerFactory.getLogger(S3Bucket.class);
 
