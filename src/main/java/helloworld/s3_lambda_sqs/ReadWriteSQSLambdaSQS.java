@@ -11,7 +11,7 @@ import java.util.Objects;
 import static helloworld.constant.Constants.QUEUE_INPUT_NAME;
 import static helloworld.constant.Constants.SQS_RECEIVED_MESSAGE;
 
-public class ReadWriteS3LambdaSQS implements RequestHandler<SQSEvent, String> {
+public class ReadWriteSQSLambdaSQS implements RequestHandler<SQSEvent, String> {
     @Override
     public String handleRequest(SQSEvent sqsEvent, Context context) {
         LambdaLogger logger = context.getLogger();
