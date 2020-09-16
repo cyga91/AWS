@@ -12,10 +12,8 @@ public class ReadWriteSQSLambdaAPI implements RequestHandler<SQSEvent, String> {
     public String handleRequest(SQSEvent sqsEvent, Context context) {
         LambdaLogger logger = context.getLogger();
 
-        String result = null;
-
         for (SQSEvent.SQSMessage msg : sqsEvent.getRecords()) {
-            result = msg.getBody();
+            String result = msg.getBody();
             logger.log(SQS_RECEIVED_MESSAGE + result);
         }
 
