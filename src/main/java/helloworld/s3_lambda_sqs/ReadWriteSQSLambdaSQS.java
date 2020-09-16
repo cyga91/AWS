@@ -21,7 +21,7 @@ public class ReadWriteSQSLambdaSQS implements RequestHandler<SQSEvent, String> {
 
         for (SQSEvent.SQSMessage msg : sqsEvent.getRecords()) {
             result = msg.getBody();
-            logger.log(SQS_RECEIVED_MESSAGE + msg.getBody());
+            logger.log(SQS_RECEIVED_MESSAGE + result);
         }
 
         Objects.requireNonNull(result);
