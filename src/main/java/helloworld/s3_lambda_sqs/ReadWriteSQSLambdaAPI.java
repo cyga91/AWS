@@ -16,6 +16,9 @@ import static helloworld.constant.Constants.MESSAGE_SENT_TO_API;
 import static helloworld.constant.Constants.SQS_RECEIVED_MESSAGE;
 
 public class ReadWriteSQSLambdaAPI implements RequestHandler<SQSEvent, String> {
+    private static final String POSTS_API_URL = "http://www.httpbin.org/post";
+
+    @SneakyThrows
     @Override
     public String handleRequest(SQSEvent sqsEvent, Context context) {
         LambdaLogger logger = context.getLogger();
