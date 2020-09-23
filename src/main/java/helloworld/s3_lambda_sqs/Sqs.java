@@ -9,7 +9,7 @@ import com.google.gson.GsonBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static helloworld.constant.Constants.MESSAGE_SENT;
+import static helloworld.constant.Constants.MESSAGE_SENT_TO_QUEUE;
 import static helloworld.constant.Constants.SQS_ALREADY_EXIST_ERROR;
 import static helloworld.constant.Constants.SQS_FOUND;
 import static helloworld.constant.Constants.WITH_DELAY_SECONDS;
@@ -46,12 +46,11 @@ public class Sqs {
         getAmazonSQS();
         String queueUrl = sqs.getQueueUrl(queueName).getQueueUrl();
 
-        // Send multiple messages to the queue
         SendMessageRequest send_msg_request = new SendMessageRequest()
                 .withQueueUrl(queueUrl)
                 .withMessageBody(message)
                 .withDelaySeconds(WITH_DELAY_SECONDS);
         sqs.sendMessage(send_msg_request);
-        logger.info(MESSAGE_SENT);
+        logger.info(MESSAGE_SENT_TO_QUEUE);
     }
 }

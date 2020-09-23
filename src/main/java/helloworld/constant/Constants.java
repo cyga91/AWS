@@ -28,12 +28,13 @@ public final class Constants {
     public static final String CURRENT_BUCKET = "Current bucket is: ";
     public static final String BUCKET_FOUND = "Bucket found: ";
 
-    public static final String MESSAGE = "Hello from message ";
-    public static final String MESSAGE_SENT = "Message has been sent to queue";
+    public static final String MESSAGE_SENT_TO_QUEUE = "Message has been sent to queue ";
 
     public static final String SQS_FOUND = "SQS found: ";
     public static final String SQS_RECEIVED_MESSAGE = "Message received from SQS: ";
     public static final String SQS_ALREADY_EXIST_ERROR = "QueueAlreadyExists";
+
+    public static final String MESSAGE_SENT_TO_API = "Message has been sent to API ";
 
     public static final int SYSTEM_EXIT_STATUS = 1;
 }
