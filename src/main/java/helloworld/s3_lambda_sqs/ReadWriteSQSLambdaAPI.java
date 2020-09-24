@@ -12,6 +12,8 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 
+import static helloworld.constant.Constants.HEADER_NAME;
+import static helloworld.constant.Constants.HEADER_VALUE;
 import static helloworld.constant.Constants.MESSAGE_SENT_TO_API;
 import static helloworld.constant.Constants.SQS_RECEIVED_MESSAGE;
 
@@ -41,7 +43,7 @@ public class ReadWriteSQSLambdaAPI implements RequestHandler<SQSEvent, String> {
     private HttpRequest createSendHttpRequest(String result) {
         return HttpRequest.newBuilder()
                 .uri(URI.create(POSTS_API_URL))
-                .header("accept", "application/json")
+                .header(HEADER_NAME, HEADER_VALUE)
                 .timeout(Duration.ofSeconds(10))
                 .POST(HttpRequest.BodyPublishers.ofString(result))
                 .build();

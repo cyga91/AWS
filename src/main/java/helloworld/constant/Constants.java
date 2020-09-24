@@ -37,4 +37,12 @@ public final class Constants {
     public static final String MESSAGE_SENT_TO_API = "Message has been sent to API ";
 
     public static final int SYSTEM_EXIT_STATUS = 1;
+
+    // httpClient
+    public static final String HEADER_NAME = "accept";
+    public static final String HEADER_VALUE = "application/json";
+
+    private Constants() {
+        throw new AssertionError();
+    }
 }

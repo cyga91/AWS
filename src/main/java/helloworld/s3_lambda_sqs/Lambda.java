@@ -9,27 +9,31 @@ import com.amazonaws.services.lambda.model.FunctionCode;
 import com.amazonaws.services.lambda.model.InvokeRequest;
 import com.amazonaws.services.lambda.model.InvokeResult;
 import com.amazonaws.services.lambda.model.ServiceException;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.charset.StandardCharsets;
 
 import static helloworld.constant.Constants.LAMBDA_FUNCTION_RUNTIME;
+import static helloworld.exception.ServiceException.CANNOT_CREATE_LAMBDA;
 
 @Data
 @Builder
 public class Lambda {
+    @NonNull
     private String lambdaName;
+    @NonNull
     private String role;
+    @NonNull
     private String s3BucketName;
+    @NonNull
     private String s3BucketKey;
+    @NonNull
     private String handler;
 
-    Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private static final Logger logger = LoggerFactory.getLogger(Lambda.class);
 
     public void createLambdaFunction() {
@@ -42,23 +46,20 @@ public class Lambda {
             awsLambda.createFunction(functionRequest);
         } catch (ServiceException e) {
             logger.error(e.getErrorMessage());
-            System.exit(1);
+            throw new ServiceException(CANNOT_CREATE_LAMBDA);
         }
         checkLambdaFunction(lambdaName);
     }
 
     private CreateFunctionRequest getFunctionRequest() {
-        CreateFunctionRequest functionRequest = new CreateFunctionRequest();
-        functionRequest.setFunctionName(lambdaName);
-        functionRequest.setRole(role);
-        FunctionCode code = new FunctionCode();
-        code.setS3Bucket(s3BucketName);
-        code.setS3Key(s3BucketKey);
-        functionRequest.setCode(code);
-        functionRequest.setRuntime(LAMBDA_FUNCTION_RUNTIME);
-        functionRequest.setHandler(handler);
+        FunctionCode code = new FunctionCode().withS3Bucket(s3BucketName).withS3Bucket(s3BucketKey);
 
-        return functionRequest;
+        return new CreateFunctionRequest()
+                .withFunctionName(lambdaName)
+                .withRole(role)
+                .withCode(code)
+                .withRuntime(LAMBDA_FUNCTION_RUNTIME)
+                .withHandler(handler);
     }
 
     public void checkLambdaFunction(String lambdaFunctionName) {
@@ -78,7 +79,7 @@ public class Lambda {
             logger.info("ANS is: " + ans);
         } catch (ServiceException e) {
             logger.error(e.getErrorMessage());
-            System.exit(1);
+            throw new ServiceException(CANNOT_CREATE_LAMBDA);
         }
 
         logger.info("" + invokeResult.getStatusCode());
