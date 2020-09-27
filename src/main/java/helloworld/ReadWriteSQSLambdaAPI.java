@@ -1,4 +1,4 @@
-package helloworld.s3_lambda_sqs;
+package helloworld;
 
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
