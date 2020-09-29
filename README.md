@@ -1,3 +1,6 @@
+# create bucket
+aws s3 mb s3://BUCKETNAME
+
 # package
 sam package \
    --template-file template.yaml \
@@ -7,6 +10,6 @@ sam package \
 # deploy
 sam deploy \
    --template-file serverless-output.yaml \
-   --stack-name <YOUR-ENV-NAME> \
+   --stack-name <STACK-NAME> \
    --capabilities CAPABILITY_IAM
    --region eu-west-1
