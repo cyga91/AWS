@@ -1,0 +1,204 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Sample SAM Template for AWS
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+#    Handler:
+#    Runtime: java8
+#    DeadLetterQueue:
+#    MemorySize: 512
+    Timeout: 20
+
+Parameters:
+  SNSTopicARN:
+    Type: String
+    Default: !GetAtt s3SNSsqs
+  TopicRegion:
+    Type: String
+    Default: "eu-west-1"
+
+Resources:
+  #  sns
+  s3SNSsqs:
+    Type: AWS::SNS::Topic
+    Properties:
+      Subscription:
+        Fn::GetAtt:
+          - "snsSQSlambda"
+          - "Arn"
+      Protocol: "sqs"
+      TopicName: "s3SNSsqs"
+#      TopicRegion: "eu-west-1"
+#        Type: String
+#        Default: eu-west-1
+  SnsTopicPolicy:
+    Type: AWS::SNS::TopicPolicy
+    DependsOn: s3SNSsqs
+    Properties:
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: SnsTopicPolicy
+            Effect: Allow
+            Principal:
+              AWS: !Sub arn:aws:iam::${910682323108}:root
+            Action:
+              - sns:Subscribe
+            Resource: !Ref s3SNSsqs
+      Topics:
+        - !Ref s3SNSsqs
+  Outputs:
+    SnsTopicArn:
+      Value: !Ref s3SNSsqs
+
+  #  sqs
+  snsSQSlambda:
+    Type: AWS::SQS::Queue
+    Properties:
+      DelaySeconds: 0
+      MaximumMessageSize: 262144 #256 KiB
+      MessageRetentionPeriod: 345600 #sec = 4 days
+      QueueName: "snsSQSlambda"
+      ReceiveMessageWaitTimeSeconds: 1
+      VisibilityTimeout: 30
+
+  # subscription
+  SnsSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: sqs
+#      Endpoint: !GetAtt Queue.Arn
+      Endpoint:
+        Fn::GetAtt:
+          - "snsSQSlambda"
+          - "Arn"
+      Region: !Ref s3SNSsqs
+      TopicArn: !Ref s3SNSsqs
+
+#  # sqsPolicy
+#  SqsQueuePolicy:
+#    Type: AWS::SQS::QueuePolicy
+#    Properties:
+#      PolicyDocument:
+#        Version: '2012-10-17'
+#        Id: MyQueuePolicy
+#        Statement:
+#          - Sid: Allow-SNS-SendMessage
+#            Effect: Allow
+#            Principal: "*"
+#            Action:
+#              - sqs:SendMessage
+#            Resource: !GetAtt snsSQSlambda
+#            Condition:
+#              ArnEquals:
+#                aws:SourceArn: !Ref s3SNSsqs
+#    Queues:
+#      - !Ref snsSQSlambda
+
+#  lambdaSQSlambda:
+#    Type: AWS::SQS::Queue
+#    Properties:
+#      DelaySeconds: 0
+#      MaximumMessageSize: 512
+#      MessageRetentionPeriod: 345600 #sec = 4 days
+#      QueueName: "lambdaSQSlambda"
+#      ReceiveMessageWaitTimeSeconds: 1
+#      RedrivePolicy:
+##        deadLetterTargetArn : arn:aws:sqs:eu-west-1:910682323108:dlqueue
+#        deadLetterTargetArn :
+#          Fn::GetAtt:
+#            - "deadLetterQueue"
+#            - "Arn"
+#        maxReceiveCount : 3
+#      VisibilityTimeout: 30
+
+#  deadLetterQueue:
+#    Type: AWS::SQS::Queue
+#    Properties:
+#      DelaySeconds: 0
+#      MaximumMessageSize: 512
+#      MessageRetentionPeriod: 345600 #sec = 4 days
+#      QueueName: "deadLetterQueue"
+#      ReceiveMessageWaitTimeSeconds: 1
+#      VisibilityTimeout: 30
+
+#  sns
+#  s3-SNS-sqs:
+#    Type: AWS::SNS::Topic
+#    Properties:
+
+  #  lambda
+  SQSLambdaSQS:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      Handler: helloworld.ReadWriteSQSLambdaSQS::handleRequest
+      Runtime: java8
+      #      CodeUri: target/HelloWorld-1.0.jar
+      Policies:
+        - AmazonSQSFullAccess:
+            SQSName: !Ref snsSQSlambda
+      MemorySize: 512
+      Role: arn:aws:iam::910682323108:role/aws-jdk-tool-HelloWorldFunctionRole-FQMTW660F1QY
+#      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
+#        Variables:
+#          PARAM1: VALUE
+      Events:
+        ReadWriteSQSLambdaAPI:
+          Type: SQS # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#sqs
+          Properties:
+            Queue:
+              Fn::GetAtt:
+                - "snsSQSlambda"
+                - "Arn"
+#            Queue: !GetAtt sns-SQS-lambda.Arn
+            BatchSize: 10
+            Enabled: true
+
+
+
+
+#Outputs:
+#  # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
+#  # Find out more about other implicit resources you can reference within SAM
+#  # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
+#  HelloWorldApi:
+#    Description: "API Gateway endpoint URL for Prod stage for Hello World function"
+#    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
+#  HelloWorldFunction:
+#    Description: "Hello World Lambda Function ARN"
+#    Value: !GetAtt SQSLambdaSQS.Arn
+#  HelloWorldFunctionIamRole:
+#    Description: "Implicit IAM Role created for Hello World function"
+#    Value: !GetAtt SQSLambdaSQS.Arn
+
+
+
+
+
+#  SQSLambdaApi:
+#    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+#    Properties:
+##      CodeUri: HelloWorldFunction
+#      Handler: helloworld.ReadWriteSQSLambdaAPI::handleRequest
+#      Policies:
+#        - AmazonSQSFullAccess:
+#            SQSName: !Ref lambdaSQSlambda
+#      Runtime: java8
+#      MemorySize: 512
+#      Role: arn:aws:iam::910682323108:role/aws-jdk-tool-HelloWorldFunctionRole-FQMTW660F1QY
+#      #      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
+#      #        Variables:
+#      #          PARAM1: VALUE
+#      Events:
+#        ReadWriteSQSLambdaAPI:
+#          Type: SQS # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#sqs
+#          Properties:
+#            Queue:
+#              Fn::GetAtt:
+#                - "lambdaSQSlambda"
+#                - "Arn"
+##            Queue: !GetAtt lambda-SQS-lambda.Arn
+#            BatchSize: 10
+#            Enabled: false

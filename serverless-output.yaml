@@ -1,0 +1,90 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Sample SAM Template for AWS
+Globals:
+  Function:
+    Timeout: 20
+Parameters:
+  SNSTopicARN:
+    Type: String
+    Default:
+      Fn::GetAtt:
+      - s3SNSsqs
+  TopicRegion:
+    Type: String
+    Default: eu-west-1
+Resources:
+  s3SNSsqs:
+    Type: AWS::SNS::Topic
+    Properties:
+      Subscription:
+        Fn::GetAtt:
+        - snsSQSlambda
+        - Arn
+      Protocol: sqs
+      TopicName: s3SNSsqs
+  SnsTopicPolicy:
+    Type: AWS::SNS::TopicPolicy
+    DependsOn: s3SNSsqs
+    Properties:
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Sid: SnsTopicPolicy
+          Effect: Allow
+          Principal:
+            AWS:
+              Fn::Sub: arn:aws:iam::${910682323108}:root
+          Action:
+          - sns:Subscribe
+          Resource:
+            Ref: s3SNSsqs
+      Topics:
+      - Ref: s3SNSsqs
+  Outputs:
+    SnsTopicArn:
+      Value:
+        Ref: s3SNSsqs
+  snsSQSlambda:
+    Type: AWS::SQS::Queue
+    Properties:
+      DelaySeconds: 0
+      MaximumMessageSize: 262144
+      MessageRetentionPeriod: 345600
+      QueueName: snsSQSlambda
+      ReceiveMessageWaitTimeSeconds: 1
+      VisibilityTimeout: 30
+  SnsSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Protocol: sqs
+      Endpoint:
+        Fn::GetAtt:
+        - snsSQSlambda
+        - Arn
+      Region:
+        Ref: s3SNSsqs
+      TopicArn:
+        Ref: s3SNSsqs
+  SQSLambdaSQS:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: helloworld.ReadWriteSQSLambdaSQS::handleRequest
+      Runtime: java8
+      Policies:
+      - AmazonSQSFullAccess:
+          SQSName:
+            Ref: snsSQSlambda
+      MemorySize: 512
+      Role: arn:aws:iam::910682323108:role/aws-jdk-tool-HelloWorldFunctionRole-FQMTW660F1QY
+      Events:
+        ReadWriteSQSLambdaAPI:
+          Type: SQS
+          Properties:
+            Queue:
+              Fn::GetAtt:
+              - snsSQSlambda
+              - Arn
+            BatchSize: 10
+            Enabled: true
+      CodeUri: s3://rcyganczuk-in-cloud-bucket-output/507e2a09e2e6332588ef0924f2702d31
