@@ -116,7 +116,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: sqsLAMBDAsqs
-      Handler: helloworld.Handler::handleRequest
+      Handler: helloworld.ReadWriteSQSLambdaSQS::handleRequest
       Runtime: java11
 #      CodeUri: target/HelloWorld-1.0.jar
       #      Policies:
