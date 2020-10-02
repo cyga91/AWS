@@ -116,8 +116,9 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: sqsLAMBDAsqs
-      Handler: helloworld.ReadWriteSQSLambdaSQS::handleRequest
+      Handler: helloworld.Handler::handleRequest
       Runtime: java11
+#      CodeUri: target/HelloWorld-1.0.jar
       #      Policies:
       #        - AmazonSQSFullAccess:
       #            SQSName: !Ref snsSQSlambdaQueue
@@ -134,28 +135,28 @@ Resources:
             BatchSize: 10
             Enabled: true
 
-  sqsLAMBDAapi:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: sqsLAMBDAapi
-      Handler: helloworld.ReadWriteSQSLambdaAPI::handleRequest
-      Runtime: java11
-      #      Policies:
-      #        - AmazonSQSFullAccess:
-      #            SQSName: !Ref lambdaSQSlambdaQueue
-      MemorySize: 512
-      Role: arn:aws:iam::910682323108:role/aws-jdk-tool-HelloWorldFunctionRole-FQMTW660F1QY
-      #      DeadLetterQueue:
-      #        Type: SQS
-      ##        TargetArn: arn:aws:sns:us-east-2:123456789012:my-topic
-      #        TargetArn: !GetAtt deadLetterQueue.Arn
-      Events:
-        ReadWriteSQSLambdaAPI:
-          Type: SQS
-          Properties:
-            Queue:
-              Fn::GetAtt:
-                - lambdaSQSlambdaQueue
-                - Arn
-            BatchSize: 10
-            Enabled: true
+#  sqsLAMBDAapi:
+#    Type: AWS::Serverless::Function
+#    Properties:
+#      FunctionName: sqsLAMBDAapi
+#      Handler: helloworld.ReadWriteSQSLambdaAPI
+#      Runtime: java11
+#      #      Policies:
+#      #        - AmazonSQSFullAccess:
+#      #            SQSName: !Ref lambdaSQSlambdaQueue
+#      MemorySize: 512
+#      Role: arn:aws:iam::910682323108:role/aws-jdk-tool-HelloWorldFunctionRole-FQMTW660F1QY
+#      #      DeadLetterQueue:
+#      #        Type: SQS
+#      ##        TargetArn: arn:aws:sns:us-east-2:123456789012:my-topic
+#      #        TargetArn: !GetAtt deadLetterQueue.Arn
+#      Events:
+#        ReadWriteSQSLambdaAPI:
+#          Type: SQS
+#          Properties:
+#            Queue:
+#              Fn::GetAtt:
+#                - lambdaSQSlambdaQueue
+#                - Arn
+#            BatchSize: 10
+#            Enabled: true

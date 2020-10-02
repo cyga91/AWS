@@ -107,4 +107,4 @@ Resources:
               - Arn
             BatchSize: 10
             Enabled: true
-      CodeUri: s3://rcyganczuk-in-cloud-bucket-output/a9732de2f6952bef75e99e5ff0d040d6
+      CodeUri: sqsLAMBDAsqs
