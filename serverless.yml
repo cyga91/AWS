@@ -1,0 +1,165 @@
+service: HelloWorldFunction
+frameworkVersion: '2'
+
+custom:
+  config: ${file(config.yml):${self:provider.stage}}
+  functionTimeout: 15
+  queueVisibilityTimeout: 20
+
+provider:
+  name: aws
+  region: eu-west-1
+  stage: ${opt:stage, 'dev'}
+  runtime: java11
+  profile: RadekC
+  environment:
+    STAGE: ${self:provider.stage}
+    LOG_LEVEL: ${self:custom.config.logLevel}
+
+package:
+  artifact: target/HelloWorld-1.0.jar
+
+functions:
+  sqsLAMBDAsqs:
+    handler: helloworld.ReadWriteSQSLambdaSQS
+    name: ${self:custom.config.sqsLAMBDAsqsName}
+    timeout: ${self:custom.functionTimeout}
+    MemorySize: 512
+    Role: arn:aws:iam::910682323108:role/aws-jdk-tool-HelloWorldFunctionRole-FQMTW660F1QY
+    events:
+      - sqs:
+          arn:
+            Fn::GetAtt:
+              - snsSQSlambdaQueue
+              - Arn
+    tags:
+      CHANGE_AUTHOR: Radek
+      BUILD_URL: URL
+
+  sqsLAMBDAapi:
+    handler: helloworld.ReadWriteSQSLambdaAPI
+    name: ${self:custom.config.sqsLAMBDAapiName}
+    timeout: ${self:custom.functionTimeout}
+    MemorySize: 512
+    Role: arn:aws:iam::910682323108:role/aws-jdk-tool-HelloWorldFunctionRole-FQMTW660F1QY
+    events:
+      - sqs:
+          arn:
+            Fn::GetAtt:
+              - lambdaSQSlambdaQueue
+              - Arn
+    tags:
+      CHANGE_AUTHOR: Radek
+      BUILD_URL: URL
+
+resources:
+  - Resources:
+    #  create S3Bucket in case it doesn't exists
+    #  s3
+#      s3BucketInCloudInput:
+#        Type: AWS::S3::Bucket
+#        Properties:
+#          BucketName: ${self:custom.config.bucketName}
+#          NotificationConfiguration:
+#            TopicConfigurations:
+#              - Event: s3:ObjectCreated:*
+#                Topic: !Ref s3SNSsqsTopic
+
+    #  sns
+      s3SNSsqsTopic:
+        Type: AWS::SNS::Topic
+        Properties:
+          TopicName: ${self:custom.config.topicName}
+          Subscription:
+            - Endpoint:
+                Fn::GetAtt:
+                  - snsSQSlambdaQueue
+                  - Arn
+              Protocol: sqs
+
+      s3SNSsqsTopicPolicy:
+        Type: AWS::SNS::TopicPolicy
+        DependsOn: s3SNSsqsTopic
+        Properties:
+          Topics:
+            - !Ref s3SNSsqsTopic
+          PolicyDocument:
+            Statement:
+              - Action: SNS:Publish
+                Effect: Allow
+                Principal: "*"
+                Resource: !Ref s3SNSsqsTopic
+                Condition:
+                  ArnEquals:
+                    aws:SourceArn: arn:aws:s3:::rcyganczuk-in-cloud-bucket-input
+
+    #  sqs
+      snsSQSlambdaQueue:
+        Type: AWS::SQS::Queue
+        Properties:
+          QueueName: ${self:custom.config.SplitterQueueName}
+          VisibilityTimeout: ${self:custom.queueVisibilityTimeout}
+          MaximumMessageSize: 262144 #256 KiB
+          DelaySeconds: 0
+          MessageRetentionPeriod: 345600 #sec = 4 days
+          ReceiveMessageWaitTimeSeconds: 1
+
+      snsSQSlambdaQueuePolicy:
+        Type: AWS::SQS::QueuePolicy
+        DependsOn: snsSQSlambdaQueue
+        Properties:
+          Queues:
+            - !Ref snsSQSlambdaQueue
+          PolicyDocument:
+            Statement:
+              - Action: SQS:SendMessage
+                Effect: Allow
+#                Sid: Allow-SNS-SendMessage
+                Principal: "*"
+                Resource: !GetAtt snsSQSlambdaQueue.Arn
+                Condition:
+                  ArnEquals:
+                    aws:SourceArn: !Ref s3SNSsqsTopic
+
+      lambdaSQSlambdaQueue:
+        Type: AWS::SQS::Queue
+        Properties:
+          QueueName: ${self:custom.config.ConverterQueueName}
+          VisibilityTimeout: ${self:custom.queueVisibilityTimeout}
+          MaximumMessageSize: 262144 #256 KiB
+          DelaySeconds: 0
+          MessageRetentionPeriod: 345600 #sec = 4 days
+          ReceiveMessageWaitTimeSeconds: 1
+          RedrivePolicy:
+            deadLetterTargetArn:
+              "Fn::GetAtt":
+                - deadLetterQueue
+                - Arn
+            maxReceiveCount: 3
+
+#        lambdaSQSlambdaQueueaQueuePolicy:
+#          Type: AWS::SQS::QueuePolicy
+#          DependsOn: snsSQSlambdaQueue
+#          Properties:
+#            Queues:
+#              - !Ref lambdaSQSlambdaQueue
+#            PolicyDocument:
+#              Statement:
+#                - Action: SQS:SendMessage
+#                  Effect: Allow
+#                  #Sid: Allow-SNS-SendMessage
+#                  Principal: "*"
+#                  Resource: !GetAtt lambdaSQSlambdaQueue.Arn
+#                  Condition:
+#                    ArnEquals:
+#                      aws:SourceArn: !Ref sqsLAMBDAsqs
+
+      deadLetterQueue:
+        Type: AWS::SQS::Queue
+        Properties:
+          QueueName: ${self:custom.config.deadLetterQueueName}
+          VisibilityTimeout: ${self:custom.queueVisibilityTimeout}
+          MaximumMessageSize: 262144 #256 KiB
+          DelaySeconds: 0
+          MessageRetentionPeriod: 345600 #sec = 4 days
+          ReceiveMessageWaitTimeSeconds: 1
