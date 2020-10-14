@@ -1,0 +1,17 @@
+dev:
+  bucketName: rcyganczuk-in-cloud-bucket-input
+  topicName: s3SNSsqsTopic
+  SplitterQueueName: snsSQSlambdaQueue
+  sqsLAMBDAsqsName: sqsLAMBDAsqs
+  sqsLAMBDAapiName: sqsLAMBDAapi
+  ConverterQueueName: lambdaSQSlambdaQueue
+  deadLetterQueueName: deadLetterQueue
+
+  logLevel: debug
+test:
+  bucketName: rcyganczuk-in-cloud-bucket-input
+  topicName: s3SNSsqsTopic
+  SplitterQueueName: snsSQSlambdaQueue
+  lambdaName: sqsLAMBDAsqs
+  ConverterQueueName: snsSQSlambdaQueue
+  logLevel: info
