@@ -25,17 +25,17 @@ public class ReadWriteSQSLambdaAPI implements RequestHandler<SQSEvent, String> {
     public String handleRequest(SQSEvent sqsEvent, Context context) {
         LambdaLogger logger = context.getLogger();
         String result = null;
-
-        for (SQSEvent.SQSMessage msg : sqsEvent.getRecords()) {
-            result = msg.getBody();
-            logger.log(SQS_RECEIVED_MESSAGE + result);
-        }
-
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = createSendHttpRequest(result);
-
-        client.send(request, HttpResponse.BodyHandlers.ofString());
-        logger.log(MESSAGE_SENT_TO_API + request.toString());
+//
+//        for (SQSEvent.SQSMessage msg : sqsEvent.getRecords()) {
+//            result = msg.getBody();
+//            logger.log(SQS_RECEIVED_MESSAGE + result);
+//        }
+//
+//        HttpClient client = HttpClient.newHttpClient();
+//        HttpRequest request = createSendHttpRequest(result);
+//
+//        client.send(request, HttpResponse.BodyHandlers.ofString());
+//        logger.log(MESSAGE_SENT_TO_API + request.toString());
 
         return "200 Ok";
     }
