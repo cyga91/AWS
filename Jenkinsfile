@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Checkout'){
             steps{
-                git 'https://github.com/cyga91/jenkins'
+                git 'https://github.com/cyga91/AWS/tree/Jenkinsfile'
             }
         }
         stage('Build') {
