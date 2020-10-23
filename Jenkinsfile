@@ -1,5 +1,10 @@
 pipeline {
     agent any
+    environment {
+       HOME="."
+       BUILD_TIME = "${sh(script:'date -u +%Y-%m-%d_%H-%M-%S-UTC', returnStdout: true).trim()}"
+//        CHANGE_AUTHOR = "${sh(script: "git --no-pager show -s --format='%ae'", returnStdout: true).trim()}"
+    }
 
     stages {
         stage('Checkout'){
