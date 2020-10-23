@@ -3,7 +3,7 @@ pipeline {
     environment {
        HOME="."
        BUILD_TIME = "${sh(script:'date -u +%Y-%m-%d_%H-%M-%S-UTC', returnStdout: true).trim()}"
-//        CHANGE_AUTHOR = "${sh(script: "git --no-pager show -s --format='%ae'", returnStdout: true).trim()}"
+       CHANGE_AUTHOR = "${sh(script: "git --no-pager show -s --format='%ae'", returnStdout: true).trim()}"
     }
 
     stages {
@@ -14,11 +14,12 @@ pipeline {
         }
         stage('Build') {
             steps {
-                // Run Maven on a Unix agent.
                 sh "./mvnw clean package"
 
-                // To run Maven on a Windows agent, use
-                // bat "mvn -Dmaven.test.failure.ignore=true clean package"
+                sh "sls devploy -v"
+//                 stash includes: 'build/libs/*.jar', name: 'jar'
+//                 stash includes: 'build/reports/**', name: 'reports'
+//                 stash includes: 'build/test-results/**', name: 'testresults'
             }
 
 //             post {
