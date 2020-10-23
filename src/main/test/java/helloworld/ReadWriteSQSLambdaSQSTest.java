@@ -3,7 +3,7 @@ package helloworld;
 import junit.framework.TestCase;
 import org.junit.Test;
 
-public class ReadWriteSQSLambdaAPITest extends TestCase {
+public class ReadWriteSQSLambdaSQSTest extends TestCase {
 
     @Test
     public void testHandleRequest() {
