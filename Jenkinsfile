@@ -70,7 +70,7 @@ pipeline {
                 expression { return params.DEV }
             }
             steps {
-                echo "Version is ${params.DEV}"
+                echo "Version is ${DEV}"
                 // sh 'dotnet publish -p:VersionPrefix="${VERSION}" --version-suffix "${VERSION_RC}" ./m3/src/Pi.Web/Pi.Web.csproj -o ./out'
                 // archiveArtifacts('out/')
             }
