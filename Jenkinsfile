@@ -39,7 +39,7 @@ pipeline {
             }
             steps {
                 sh "./mvnw clean install -DskipTests"
-                // stash includes: 'build/libs/*.jar', name: 'jar'
+                //stash includes: 'build/libs/*.jar', name: 'jar'
                 //stash includes: 'build/reports/**', name: 'reports'
                 //stash includes: 'build/test-results/**', name: 'testresults'
                 echo "This build is on branch: ${BRANCH}"
@@ -81,7 +81,6 @@ pipeline {
             steps {
                 echo "Is version develop: ${DEV}"
                 echo "Is version prod: ${PROD}"
-                stash includes: 'build/libs/*.jar', name: 'jar'
             }
         }
     }
