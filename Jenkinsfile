@@ -31,7 +31,7 @@ pipeline {
             environment {
             VERSION_DEV_SUFFIX =  getVersionDevSuffix()
             // VERSION_DEV_SUFFIX = "${sh(script:'if [ "${DEV}" == "false" ] ; then echo -n "${VERSION}+ci.${BUILD_NUMBER}"; else echo -n "${VERSION}"; fi', returnStdout: true)}"
-            VERSION_PROD_SUFFIX = getVersionDevSuffix()
+            VERSION_PROD_SUFFIX = getVersionProdSuffix()
             // VERSION_PROD_SUFFIX = "${sh(script:'if [ "${PROD}" == "false" ] ; then echo -n "${VERSION}+ci.${BUILD_NUMBER}"; else echo -n "${VERSION}"; fi', returnStdout: true)}"
             BUILD_TIME = "${sh(script:'date -u +%Y-%m-%d_%H-%M-%S-UTC', returnStdout: true).trim()}"
             }
