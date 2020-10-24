@@ -11,8 +11,8 @@ pipeline {
             CHANGE_AUTHOR = "${sh(script: "git --no-pager show -s --format='%ae'", returnStdout: true).trim()}"
             }
             steps{
-                // git 'https://github.com/cyga91/AWS/'
-                git 'https://github.com/cyga91/AWS/tree/Jenkinsfile'
+                git 'https://github.com/cyga91/AWS/'
+//                 git 'https://github.com/cyga91/AWS/tree/Jenkinsfile'
                 echo 'This build is on branch: $BRANCH'
                 echo 'This is stage: $STAGE_NAME'
                 echo "This build was triggered by: $CHANGE_AUTHOR"
