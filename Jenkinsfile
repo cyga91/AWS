@@ -51,8 +51,8 @@ pipeline {
                 sh "./mvnw test"
                 echo "Testing release ${BRANCH}"
                 writeFile file: 'test-results.txt', text: 'passed'
-                stash includes: 'build/reports/**', name: 'reports'
-                stash includes: 'build/test-results/**', name: 'testresults'
+                // stash includes: 'build/reports/**', name: 'reports'
+                // stash includes: 'build/test-results/**', name: 'testresults'
             }
         }
         // stage('Deploy') {
@@ -67,8 +67,8 @@ pipeline {
         success {
             echo 'Deploy success'
             archiveArtifacts 'test-results.txt'
-            junit '**/target/surefire-reports/TEST-*.xml'
-            archiveArtifacts 'target/*.jar'
+            // junit '**/target/surefire-reports/TEST-*.xml'
+            // archiveArtifacts 'target/*.jar'
         }
         failure {
             echo 'Deploy failure'
