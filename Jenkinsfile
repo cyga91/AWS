@@ -6,7 +6,8 @@ pipeline {
        HOME="."
     }
     parameters {
-        booleanParam(name: 'DEV', defaultValue: false, description: 'Is this a DEVELOP Candidate?')
+        booleanParam(name: 'DEV', defaultValue: false, description: 'Is this a develop candidate?')
+        booleanParam(name: 'PROD', defaultValue: false, description: 'Is this a prod candidate?')
         // booleanParam(name: 'deployOverride', defaultValue: false, description: 'Force Deploy (used for deploying non-master branches)')
         // booleanParam(name: 'runTests', defaultValue: true, description: 'Run integration tests (if tests fail build will be failed)')
     }
@@ -33,6 +34,7 @@ pipeline {
         stage('Build') {
             environment {
             VERSION_SUFFIX = "${sh(script:'if [ "${DEV}" == "false" ] ; then echo -n "${VERSION}+ci.${BUILD_NUMBER}"; else echo -n "${VERSION}"; fi', returnStdout: true)}"
+            VERSION_SUFFIX = "${sh(script:'if [ "${PROD}" == "false" ] ; then echo -n "${VERSION}+ci.${BUILD_NUMBER}"; else echo -n "${VERSION}"; fi', returnStdout: true)}"
             BUILD_TIME = "${sh(script:'date -u +%Y-%m-%d_%H-%M-%S-UTC', returnStdout: true).trim()}"
             }
             steps {
@@ -40,7 +42,7 @@ pipeline {
                 // sh "./mvnw clean package"
                 echo "This build is on branch: ${BRANCH}"
                 echo "This is stage: ${STAGE_NAME}"
-                echo "This is build number: ${BUILD_NUMBER}"
+                echo "Building version: ${VERSION} with suffix: ${VERSION_SUFFIX}"
                 echo "This build was created at: ${BUILD_TIME}"
 //                 sh "sls devploy -v"
 //                 stash includes: 'build/libs/*.jar', name: 'jar'
@@ -67,10 +69,14 @@ pipeline {
         // }
         stage('Publish') {
             when {
-                expression { return params.DEV }
+                anyOf{
+                    expression { return params.DEV }
+                    expression { return params.PROD }
+                }
             }
             steps {
-                echo "Version is ${DEV}"
+                echo "Is version develop: ${DEV}"
+                echo "Is version prod: ${PROD}"
                 // sh 'dotnet publish -p:VersionPrefix="${VERSION}" --version-suffix "${VERSION_RC}" ./m3/src/Pi.Web/Pi.Web.csproj -o ./out'
                 // archiveArtifacts('out/')
             }
