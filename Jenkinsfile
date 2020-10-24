@@ -33,8 +33,8 @@ pipeline {
         }
         stage('Build') {
             environment {
-            VERSION_SUFFIX = "${sh(script:'if [ "${DEV}" == "false" ] ; then echo -n "${VERSION}+ci.${BUILD_NUMBER}"; else echo -n "${VERSION}"; fi', returnStdout: true)}"
-            VERSION_SUFFIX = "${sh(script:'if [ "${PROD}" == "false" ] ; then echo -n "${VERSION}+ci.${BUILD_NUMBER}"; else echo -n "${VERSION}"; fi', returnStdout: true)}"
+            VERSION_DEV_SUFFIX = "${sh(script:'if [ "${DEV}" == "false" ] ; then echo -n "${VERSION}+ci.${BUILD_NUMBER}"; else echo -n "${VERSION}"; fi', returnStdout: true)}"
+            VERSION_PROD_SUFFIX = "${sh(script:'if [ "${PROD}" == "false" ] ; then echo -n "${VERSION}+ci.${BUILD_NUMBER}"; else echo -n "${VERSION}"; fi', returnStdout: true)}"
             BUILD_TIME = "${sh(script:'date -u +%Y-%m-%d_%H-%M-%S-UTC', returnStdout: true).trim()}"
             }
             steps {
@@ -42,7 +42,8 @@ pipeline {
                 // sh "./mvnw clean package"
                 echo "This build is on branch: ${BRANCH}"
                 echo "This is stage: ${STAGE_NAME}"
-                echo "Building version: ${VERSION} with suffix: ${VERSION_SUFFIX}"
+                echo "Building version: ${VERSION} with suffix: ${VERSION_DEV_SUFFIX}"
+                echo "Building version: ${VERSION} with suffix: ${VERSION_PROD_SUFFIX}"
                 echo "This build was created at: ${BUILD_TIME}"
 //                 sh "sls devploy -v"
 //                 stash includes: 'build/libs/*.jar', name: 'jar'
