@@ -6,7 +6,7 @@
     },
     "provider": {
       "stage": "dev",
-      "variableSyntax": "\\${([^{}:]+?(?:\\(|:)[^:{}][^{}]*?)}",
+      "variableSyntax": "\\${([^{}:]+?(?:\\(|:)(?:[^:{}][^{}]*?)?)}",
       "name": "aws",
       "region": "eu-west-1",
       "runtime": "java11",
@@ -208,7 +208,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/HelloWorldFunction/dev/1602680253011-2020-10-14T12:57:33.011Z/HelloWorld-1.0.jar"
+                "S3Key": "serverless/HelloWorldFunction/dev/1603455920631-2020-10-23T12:25:20.631Z/HelloWorld-1.0.jar"
               },
               "FunctionName": "sqsLAMBDAsqs",
               "Handler": "helloworld.ReadWriteSQSLambdaSQS",
@@ -242,14 +242,14 @@
               "SqsLAMBDAsqsLogGroup"
             ]
           },
-          "SqsLAMBDAsqsLambdaVersionKRKpJx33ZBw5CaPrdHkf9jRiKu6w6o0RuCJhsHno4": {
+          "SqsLAMBDAsqsLambdaVersioncciv8LM8PuchTpwqKZYcNHmz443i0qC71tG0sAtB5AU": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "SqsLAMBDAsqsLambdaFunction"
               },
-              "CodeSha256": "XhiY6nNQEm0AfFDbytK2ach47cOvWVJ64QPXAc6ANr8="
+              "CodeSha256": "hXBeLxUJ3stOF7M9dyPElWur7/82UfCk6w3rzPU3kFI="
             }
           },
           "SqsLAMBDAapiLambdaFunction": {
@@ -259,7 +259,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/HelloWorldFunction/dev/1602680253011-2020-10-14T12:57:33.011Z/HelloWorld-1.0.jar"
+                "S3Key": "serverless/HelloWorldFunction/dev/1603455920631-2020-10-23T12:25:20.631Z/HelloWorld-1.0.jar"
               },
               "FunctionName": "sqsLAMBDAapi",
               "Handler": "helloworld.ReadWriteSQSLambdaAPI",
@@ -293,14 +293,14 @@
               "SqsLAMBDAapiLogGroup"
             ]
           },
-          "SqsLAMBDAapiLambdaVersion9rfQzuwEkBIFCkmzWxPozYMXXuWjFUJBTVaSsfGPNQo": {
+          "SqsLAMBDAapiLambdaVersion4fn2paZg8evNRtcRooPAZE7x9cqI4qhwlHZNVVwM": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "SqsLAMBDAapiLambdaFunction"
               },
-              "CodeSha256": "XhiY6nNQEm0AfFDbytK2ach47cOvWVJ64QPXAc6ANr8="
+              "CodeSha256": "hXBeLxUJ3stOF7M9dyPElWur7/82UfCk6w3rzPU3kFI="
             }
           },
           "SqsLAMBDAsqsEventSourceMappingSQSSnsSQSlambdaQueue": {
@@ -366,7 +366,9 @@
           },
           "s3SNSsqsTopicPolicy": {
             "Type": "AWS::SNS::TopicPolicy",
-            "DependsOn": "s3SNSsqsTopic",
+            "DependsOn": [
+              "s3SNSsqsTopic"
+            ],
             "Properties": {
               "Topics": [
                 {
@@ -405,7 +407,9 @@
           },
           "snsSQSlambdaQueuePolicy": {
             "Type": "AWS::SQS::QueuePolicy",
-            "DependsOn": "snsSQSlambdaQueue",
+            "DependsOn": [
+              "snsSQSlambdaQueue"
+            ],
             "Properties": {
               "Queues": [
                 {
@@ -477,13 +481,13 @@
           "SqsLAMBDAsqsLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "SqsLAMBDAsqsLambdaVersionKRKpJx33ZBw5CaPrdHkf9jRiKu6w6o0RuCJhsHno4"
+              "Ref": "SqsLAMBDAsqsLambdaVersioncciv8LM8PuchTpwqKZYcNHmz443i0qC71tG0sAtB5AU"
             }
           },
           "SqsLAMBDAapiLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "SqsLAMBDAapiLambdaVersion9rfQzuwEkBIFCkmzWxPozYMXXuWjFUJBTVaSsfGPNQo"
+              "Ref": "SqsLAMBDAapiLambdaVersion4fn2paZg8evNRtcRooPAZE7x9cqI4qhwlHZNVVwM"
             }
           }
         }
@@ -596,7 +600,7 @@
         "memory": 1024,
         "runtime": "java11",
         "vpc": {},
-        "versionLogicalId": "SqsLAMBDAsqsLambdaVersionKRKpJx33ZBw5CaPrdHkf9jRiKu6w6o0RuCJhsHno4"
+        "versionLogicalId": "SqsLAMBDAsqsLambdaVersioncciv8LM8PuchTpwqKZYcNHmz443i0qC71tG0sAtB5AU"
       },
       "sqsLAMBDAapi": {
         "handler": "helloworld.ReadWriteSQSLambdaAPI",
@@ -621,7 +625,7 @@
         "memory": 1024,
         "runtime": "java11",
         "vpc": {},
-        "versionLogicalId": "SqsLAMBDAapiLambdaVersion9rfQzuwEkBIFCkmzWxPozYMXXuWjFUJBTVaSsfGPNQo"
+        "versionLogicalId": "SqsLAMBDAapiLambdaVersion4fn2paZg8evNRtcRooPAZE7x9cqI4qhwlHZNVVwM"
       }
     },
     "resources": {
@@ -645,7 +649,9 @@
         },
         "s3SNSsqsTopicPolicy": {
           "Type": "AWS::SNS::TopicPolicy",
-          "DependsOn": "s3SNSsqsTopic",
+          "DependsOn": [
+            "s3SNSsqsTopic"
+          ],
           "Properties": {
             "Topics": [
               {
@@ -684,7 +690,9 @@
         },
         "snsSQSlambdaQueuePolicy": {
           "Type": "AWS::SQS::QueuePolicy",
-          "DependsOn": "snsSQSlambdaQueue",
+          "DependsOn": [
+            "snsSQSlambdaQueue"
+          ],
           "Properties": {
             "Queues": [
               {
@@ -771,7 +779,7 @@
       },
       "package": {
         "artifact": "target/HelloWorld-1.0.jar",
-        "artifactDirectoryName": "serverless/HelloWorldFunction/dev/1602680253011-2020-10-14T12:57:33.011Z"
+        "artifactDirectoryName": "serverless/HelloWorldFunction/dev/1603455920631-2020-10-23T12:25:20.631Z"
       },
       "functions": {
         "$ref": "$[\"service\"][\"functions\"]"
@@ -906,7 +914,7 @@
     "isDashboardMonitoringPreconfigured": false
   },
   "package": {
-    "artifactDirectoryName": "serverless/HelloWorldFunction/dev/1602680253011-2020-10-14T12:57:33.011Z",
+    "artifactDirectoryName": "serverless/HelloWorldFunction/dev/1603455920631-2020-10-23T12:25:20.631Z",
     "artifact": "HelloWorld-1.0.jar"
   }
 }
