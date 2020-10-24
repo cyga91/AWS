@@ -13,8 +13,8 @@ pipeline {
             steps{
                 git 'https://github.com/cyga91/AWS/'
                 echo "This build is on branch: ${BRANCH}"
-                echo 'This is stage: $STAGE_NAME'
-                echo "This build was triggered by: $CHANGE_AUTHOR"
+                echo "This is stage: ${STAGE_NAME}"
+                echo "This build was triggered by: ${CHANGE_AUTHOR}"
             }
         }
         stage('Build') {
@@ -23,10 +23,10 @@ pipeline {
             }
             steps {
                 sh "./mvnw clean package"
-                echo 'This build is on branch: $BRANCH'
-                echo 'This is stage: $STAGE_NAME'
-                echo "This is build number: $BUILD_NUMBER"
-                echo "This build was created at: $BUILD_TIME"
+                echo "This build is on branch: ${BRANCH}"
+                echo "This is stage: ${STAGE_NAME}"
+                echo "This is build number: ${BUILD_NUMBER}"
+                echo "This build was created at: ${BUILD_TIME}"
 //                 sh "sls devploy -v"
 //                 stash includes: 'build/libs/*.jar', name: 'jar'
 //                 stash includes: 'build/reports/**', name: 'reports'
