@@ -9,7 +9,7 @@ pipeline {
         booleanParam(name: 'DEV', defaultValue: false, description: 'Is this a develop candidate?')
         booleanParam(name: 'PROD', defaultValue: false, description: 'Is this a prod candidate?')
         // booleanParam(name: 'deployOverride', defaultValue: false, description: 'Force Deploy (used for deploying non-master branches)')
-        // booleanParam(name: 'runTests', defaultValue: true, description: 'Run integration tests (if tests fail build will be failed)')
+        booleanParam(name: 'runTests', defaultValue: true, description: 'Run integration tests (if tests fail build will be failed)')
     }
     stages {
         stage('Audit tools') {
@@ -53,7 +53,7 @@ pipeline {
         }
         stage('Tets'){
             when {
-                branch 'Jenkinsfile'
+                expression { return params.runTests }
             }
             steps {
                 sh "./mvnw test"
