@@ -2,16 +2,20 @@ pipeline {
     agent any
     environment {
        BRANCH='DEVELOP'
+       VERSION="1.0"
        HOME="."
     }
-
+    parameters {
+        booleanParam(name: 'DEV', defaultValue: false, description: 'Is this a DEVELOP Candidate?')
+        // booleanParam(name: 'deployOverride', defaultValue: false, description: 'Force Deploy (used for deploying non-master branches)')
+        // booleanParam(name: 'runTests', defaultValue: true, description: 'Run integration tests (if tests fail build will be failed)')
+    }
     stages {
         stage('Audit tools') {
             steps {
                 sh '''
                   git version
                   mvn --version
-                  docker version
                 '''
             }
         }
@@ -28,6 +32,7 @@ pipeline {
         }
         stage('Build') {
             environment {
+            VERSION_SUFFIX = "${sh(script:'if [ "${DEV}" == "false" ] ; then echo -n "${VERSION}+ci.${BUILD_NUMBER}"; else echo -n "${VERSION}"; fi', returnStdout: true)}"
             BUILD_TIME = "${sh(script:'date -u +%Y-%m-%d_%H-%M-%S-UTC', returnStdout: true).trim()}"
             }
             steps {
@@ -60,6 +65,16 @@ pipeline {
 
         //     }
         // }
+        stage('Publish') {
+            when {
+                expression { return params.DEV }
+            }
+            steps {
+                echo "Version is ${params.DEV}"
+                // sh 'dotnet publish -p:VersionPrefix="${VERSION}" --version-suffix "${VERSION_RC}" ./m3/src/Pi.Web/Pi.Web.csproj -o ./out'
+                // archiveArtifacts('out/')
+            }
+        }
     }
     post {
         // If Maven was able to run the tests, even if some of the test
