@@ -51,14 +51,14 @@ pipeline {
         success {
             echo 'Deploy success'
             archiveArtifacts 'test-results.txt'
-            // junit '**/target/surefire-reports/TEST-*.xml'
-            // archiveArtifacts 'target/*.jar'
+            junit '**/target/surefire-reports/TEST-*.xml'
+            archiveArtifacts 'target/*.jar'
         }
         failure {
             echo 'Deploy failure'
         }
         always {
-            echo 'Deploy happened or not, success or failure'
+            echo 'Deploy ends'
             // junit '**/target/surefire-reports/TEST-*.xml'
             // archiveArtifacts 'target/*.jar'
             // emailext
