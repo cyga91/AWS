@@ -6,6 +6,15 @@ pipeline {
     }
 
     stages {
+        stage('Audit tools') {
+            steps {
+                sh '''
+                  git version
+                  mvn --version
+                  docker version
+                '''
+            }
+        }
         stage('Checkout'){
             environment {
             CHANGE_AUTHOR = "${sh(script: "git --no-pager show -s --format='%ae'", returnStdout: true).trim()}"
@@ -22,7 +31,8 @@ pipeline {
             BUILD_TIME = "${sh(script:'date -u +%Y-%m-%d_%H-%M-%S-UTC', returnStdout: true).trim()}"
             }
             steps {
-                sh "./mvnw clean package"
+                sh "./mvnw clean install -DskipTests"
+                // sh "./mvnw clean package"
                 echo "This build is on branch: ${BRANCH}"
                 echo "This is stage: ${STAGE_NAME}"
                 echo "This is build number: ${BUILD_NUMBER}"
@@ -34,7 +44,11 @@ pipeline {
             }
         }
         stage('Tets'){
+            when {
+                branch 'master'
+            }
             steps {
+                sh "./mvnw test"
                 echo "Testing release ${BRANCH}"
                 writeFile file: 'test-results.txt', text: 'passed'
             }
@@ -51,8 +65,8 @@ pipeline {
         success {
             echo 'Deploy success'
             archiveArtifacts 'test-results.txt'
-            junit '**/target/surefire-reports/TEST-*.xml'
-            archiveArtifacts 'target/*.jar'
+            // junit '**/target/surefire-reports/TEST-*.xml'
+            // archiveArtifacts 'target/*.jar'
         }
         failure {
             echo 'Deploy failure'
