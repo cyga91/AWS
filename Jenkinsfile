@@ -22,17 +22,13 @@ pipeline {
             }
             steps{
                 git 'https://github.com/cyga91/AWS/'
-                echo "This build is on branch: ${BRANCH}"
-                echo "This is stage: ${STAGE_NAME}"
-                echo "This build was triggered by: ${CHANGE_AUTHOR}"
+                echo "This build is on branch: ${BRANCH}, stage: ${STAGE_NAME}, triggered by: ${CHANGE_AUTHOR}"
             }
         }
         stage('Build') {
             environment {
             VERSION_DEV_SUFFIX =  getVersionDevSuffix()
-            // VERSION_DEV_SUFFIX = "${sh(script:'if [ "${DEV}" == "false" ] ; then echo -n "${VERSION}+ci.${BUILD_NUMBER}"; else echo -n "${VERSION}"; fi', returnStdout: true)}"
             VERSION_PROD_SUFFIX = getVersionProdSuffix()
-            // VERSION_PROD_SUFFIX = "${sh(script:'if [ "${PROD}" == "false" ] ; then echo -n "${VERSION}+ci.${BUILD_NUMBER}"; else echo -n "${VERSION}"; fi', returnStdout: true)}"
             BUILD_TIME = "${sh(script:'date -u +%Y-%m-%d_%H-%M-%S-UTC', returnStdout: true).trim()}"
             }
             steps {
@@ -40,11 +36,9 @@ pipeline {
                 //stash includes: 'build/libs/*.jar', name: 'jar'
                 //stash includes: 'build/reports/**', name: 'reports'
                 //stash includes: 'build/test-results/**', name: 'testresults'
-                echo "This build is on branch: ${BRANCH}"
-                echo "This is stage: ${STAGE_NAME}"
+                echo "This build is on branch: ${BRANCH}, stage: ${STAGE_NAME}, was created at: ${BUILD_TIME}"
                 echo "Building version: ${VERSION} with suffix: ${VERSION_DEV_SUFFIX}"
                 echo "Building version: ${VERSION} with suffix: ${VERSION_PROD_SUFFIX}"
-                echo "This build was created at: ${BUILD_TIME}"
             }
         }
         stage('Tets'){
