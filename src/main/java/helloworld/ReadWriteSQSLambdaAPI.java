@@ -6,6 +6,7 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.SQSEvent;
 import lombok.SneakyThrows;
 
+import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -34,7 +35,11 @@ public class ReadWriteSQSLambdaAPI implements RequestHandler<SQSEvent, String> {
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = createSendHttpRequest(result);
 
-        client.send(request, HttpResponse.BodyHandlers.ofString());
+//        try {
+//            client.send(request, HttpResponse.BodyHandlers.ofString());
+//        }catch (IOException e){
+//            logger.log("Exception" + e);
+//        }
         logger.log(MESSAGE_SENT_TO_API + request.toString());
 
         return "200 Ok";
