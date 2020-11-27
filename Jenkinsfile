@@ -32,7 +32,7 @@ pipeline {
             BUILD_TIME = "${sh(script:'date -u +%Y-%m-%d_%H-%M-%S-UTC', returnStdout: true).trim()}"
             }
             steps {
-                sh "./mvnw clean install -DskipTests"
+                sh "./gradlew clean install -DskipTests"
                 //stash includes: 'build/libs/*.jar', name: 'jar'
                 //stash includes: 'build/reports/**', name: 'reports'
                 //stash includes: 'build/test-results/**', name: 'testresults'
