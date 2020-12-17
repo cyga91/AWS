@@ -1,0 +1,2 @@
+helloworld/lambda2step/camel/pipeline/CamelPipelineTest.java
+ helloworld.lambda2step.camel.pipeline.CamelPipelineTest
