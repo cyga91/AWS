@@ -42,3 +42,4 @@ dependency-reduced-pom.xml
 gradle/
 build
 .gradle
+.gradle/
