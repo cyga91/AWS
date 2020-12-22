@@ -1,3 +1,0 @@
-retryLogic:
-  max-redeliveries: 3
-  redelivery-delay: 1000L

@@ -1,6 +1,8 @@
 package helloworld.lambda2step.camel.error;
 
+import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.camel.Exchange;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.NoSuchEndpointException;
 import org.apache.camel.builder.RouteBuilder;
@@ -10,6 +12,7 @@ import java.net.ConnectException;
 import java.net.UnknownHostException;
 
 @Slf4j
+@UtilityClass
 public class RouteBuilderErrorHandlingUtils {
     private static final String FAILURE_MESSAGE = "Failed due to connection error";
 
@@ -28,7 +31,18 @@ public class RouteBuilderErrorHandlingUtils {
                 .stop();
 
         r.onException(HttpOperationFailedException.class)
-                .log("onException(HttpOperationFailedException.class)" + routeName + FAILURE_MESSAGE)
+                .onWhen(exchange ->
+                        exchange.getProperty(Exchange.EXCEPTION_CAUGHT, HttpOperationFailedException.class)
+                                .getStatusCode() < 500)
+                .handled(false)
+                .stop();
+
+        r.onException(HttpOperationFailedException.class)
+                .onWhen(exchange ->
+                        exchange.getProperty(Exchange.EXCEPTION_CAUGHT, HttpOperationFailedException.class)
+                                .getStatusCode() >= 500)
+                .maximumRedeliveries(3)
+                .redeliveryDelay(1000L)
                 .handled(false)
                 .stop();
 

@@ -1,6 +1,5 @@
 package helloworld.lambda2step.camel.router;
 
-import helloworld.lambda2step.camel.error.CustomRouteBuilderErrorHandlingUtils;
 import helloworld.lambda2step.camel.error.RouteBuilderErrorHandlingUtils;
 import helloworld.lambda2step.camel.processor.ChinaProcessor;
 import helloworld.lambda2step.camel.processor.EMEAProcessor;
@@ -11,10 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.camel.Exchange;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.http.conn.HttpHostConnectException;
 import org.springframework.stereotype.Component;
-
-import static helloworld.lambda2step.camel.error.RouteBuilderErrorHandlingUtils.configureOnExceptions;
 
 @Component
 @RequiredArgsConstructor
@@ -30,7 +26,7 @@ public class OrderRouter extends RouteBuilder {
 
     @Override
     public void configure(){
-        CustomRouteBuilderErrorHandlingUtils.configureOnExceptions(this, "OrderRoutes");
+        RouteBuilderErrorHandlingUtils.configureOnExceptions(this, "OrderRoutes");
 
         from("direct:start")
                 .streamCaching()
@@ -66,12 +62,6 @@ public class OrderRouter extends RouteBuilder {
                         .to("http://localhost:8080/endpoint")
                         .process(emeaProcessor)
                         .to("file:destination/?fileName=MyFile3.txt&charset=utf-8")
-                .end();
-
-        from("direct:ExceptionCreateProcessor")
-                .routeId("ExceptionCreateProcessor")
-                .routeDescription("Throw exception if destination is null")
-                .process(exceptionProcessor)
                 .end();
     }
 }
