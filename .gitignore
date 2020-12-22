@@ -39,5 +39,6 @@ Thumbs.db
 target
 dependency-reduced-pom.xml
 *.iml
-gradle
+gradle/
 build
+.gradle/
