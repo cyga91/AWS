@@ -6,8 +6,9 @@ dev:
   sqsLAMBDAapiName: sqsLAMBDAapi
   ConverterQueueName: lambdaSQSlambdaQueue
   deadLetterQueueName: deadLetterQueue
+  logLevel: info
+  max-redeliveries: 3
 
-  logLevel: debug
 test:
   bucketName: rcyganczuk-in-cloud-bucket-input
   topicName: s3SNSsqsTopic
